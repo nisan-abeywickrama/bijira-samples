@@ -5,8 +5,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const NOTE_MODIFY = "Please note that changes are not persisted.";
-
 // Dummy list of books with hardcoded UUIDs
 const dummyBooks = [
   {
@@ -43,7 +41,10 @@ app.post("/reading-list/books", (req, res) => {
     return res.status(400).json({ error: "Title, Status or Author is empty" });
   }
 
-  return res.status(201).json({ uuid, title, author, status, note: NOTE_MODIFY });
+  const newBook = { id: uuid, title, author, status };
+  dummyBooks.push(newBook);
+
+  return res.status(201).json(newBook);
 });
 
 // update status of a book by uuid
@@ -60,7 +61,13 @@ app.put("/reading-list/books/:uuid", (req, res) => {
     });
   }
 
-  return res.json({ uuid, status, note: NOTE_MODIFY });
+  const book = dummyBooks.find((book) => book.id === uuid);
+  if (!book) {
+    return res.status(404).json({ error: "UUID does not exist" });
+  }
+
+  book.status = status;
+  return res.json(book);
 });
 
 // get the list of books (no note here)
@@ -90,7 +97,13 @@ app.delete("/reading-list/books/:uuid", (req, res) => {
     return res.status(400).json({ error: "Missing or invalid UUID" });
   }
 
-  return res.json({ uuid, note: NOTE_MODIFY });
+  const index = dummyBooks.findIndex((book) => book.id === uuid);
+  if (index === -1) {
+    return res.status(404).json({ error: "UUID does not exist" });
+  }
+
+  const deletedBook = dummyBooks.splice(index, 1)[0];
+  return res.json(deletedBook);
 });
 
 // health check
