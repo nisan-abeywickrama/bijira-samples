@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: MCP Chat Agent API
+  description: A web-based chat application that connects AI models with Model Context Protocol (MCP) servers for extended functionality
+  version: 1.0.0
+  contact:
+    name: MCP Chat Agent
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:5050
+    description: Local development server
+
+paths:
+  /:
+    get:
+      summary: Serve chat interface
+      description: Returns the main chat HTML interface
+      operationId: getIndex
+      responses:
+        '200':
+          description: Chat interface HTML page
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /config:
+    post:
+      summary: Save configuration
+      description: Save LLM and MCP server configuration to server memory
+      operationId: saveConfig
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration'
+            examples:
+              openai_example:
+                summary: OpenAI Configuration
+                value:
+                  provider: "openai"
+                  model_name: "gpt-4o"
+                  api_key: "sk-..."
+                  mcp_servers:
+                    playwright:
+                      command: "npx"
+                      args: ["@playwright/mcp@latest"]
+              azure_example:
+                summary: Azure OpenAI Configuration
+                value:
+                  provider: "azure_openai"
+                  azure_deployment: "gpt-35-turbo"
+                  api_version: "2023-05-15"
+                  azure_endpoint: "https://your-resource.openai.azure.com/"
+                  api_key: "your-azure-key"
+      responses:
+        '200':
+          description: Configuration saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Get configuration
+      description: Retrieve current configuration from server memory
+      operationId: getConfig
+      responses:
+        '200':
+          description: Current configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration'
+
+  /chat:
+    post:
+      summary: Send chat message
+      description: Send a message to the AI agent and receive a response
+      operationId: sendMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            example:
+              message: "Find the best restaurant in San Francisco"
+      responses:
+        '200':
+          description: AI agent response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Bad request - no input received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Configuration:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: ["openai", "azure_openai", "mistralai"]
+          description: LLM provider
+        model_name:
+          type: string
+          description: Model name (for OpenAI and MistralAI)
+          example: "gpt-4o"
+        api_key:
+          type: string
+          description: API key for the LLM provider
+          format: password
+        azure_deployment:
+          type: string
+          description: Azure deployment name (Azure OpenAI only)
+        api_version:
+          type: string
+          description: API version (Azure OpenAI only)
+          example: "2023-05-15"
+        azure_endpoint:
+          type: string
+          description: Azure endpoint URL (Azure OpenAI only)
+          format: uri
+          example: "https://your-resource.openai.azure.com/"
+        mcp_servers:
+          type: object
+          description: MCP server configurations
+          additionalProperties:
+            $ref: '#/components/schemas/MCPServerConfig'
+      required:
+        - provider
+        - api_key
+
+    MCPServerConfig:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command to start the MCP server
+          example: "npx"
+        args:
+          type: array
+          items:
+            type: string
+          description: Arguments for the MCP server command
+          example: ["@playwright/mcp@latest"]
+        env:
+          type: object
+          additionalProperties:
+            type: string
+          description: Environment variables for the MCP server
+      required:
+        - command
+
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: User message to send to the AI agent
+          example: "Find the best restaurant in San Francisco"
+      required:
+        - message
+
+    ChatResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: AI agent response
+          example: "I found several highly-rated restaurants in San Francisco..."
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Configuration saved successfully"
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error message
+          example: "No input received"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Optional API key for authentication
+
+tags:
+  - name: chat
+    description: Chat operations
+  - name: config
+    description: Configuration management
