@@ -49,17 +49,21 @@ def _mcp_config_changed(current_mcp, cached_mcp):
     if bool(current_mcp) != bool(cached_mcp):
         return True
     
-    # Check if server names (keys) are different
-    current_servers = set(current_mcp.keys())
-    cached_servers = set(cached_mcp.keys())
+    # Get the mcpServers from both configs
+    current_servers = current_mcp.get("mcpServers", {})
+    cached_servers = cached_mcp.get("mcpServers", {})
     
-    if current_servers != cached_servers:
+    # Check if server names (keys) are different
+    current_server_names = set(current_servers.keys())
+    cached_server_names = set(cached_servers.keys())
+    
+    if current_server_names != cached_server_names:
         return True
     
     # Check if any server configuration has changed
-    for server_name in current_servers:
-        current_server_config = current_mcp[server_name]
-        cached_server_config = cached_mcp[server_name]
+    for server_name in current_server_names:
+        current_server_config = current_servers[server_name]
+        cached_server_config = cached_servers[server_name]
         
         # Deep comparison of server configurations
         if current_server_config != cached_server_config:
