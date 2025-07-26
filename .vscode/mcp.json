@@ -1,0 +1,11 @@
+{
+      "servers": {
+        "Reading 123 MCP Contract": {
+          "url": "https://f48ce6b7-d44f-48b0-b410-56d3eae3626a-prod.e1-us-east-azure.bijiraapis.dev/default/reading-123-mcp-contract/v1.0/mcp",
+          "type": "http",
+          "headers": {
+            "Authorization": "Bearer eyJ4NXQjUzI1NiI6IkVPOXZIYnhad0xXMlpiY0d6VTRaaVE1SktCS2p1akhNc08zRU83bjc3X0kiLCJraWQiOiJmNDhjZTZiNy1kNDRmLTQ4YjAtYjQxMC01NmQzZWFlMzYyNmEjNjU1OWZkNjYtMzk4YS00NzZkLTkzMWItZmM3NzYwZDBhZjgyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHb2w1UklBY1YweHdHbUxDcE9LZHNhRXhoaWwwIiwiYXVkIjoiR29sNVJJQWNWMHh3R21MQ3BPS2RzYUV4aGlsMCIsImF1dCI6IkFQUExJQ0FUSU9OIiwibmJmIjoxNzUzNTUwMjE0LCJhenAiOiJHb2w1UklBY1YweHdHbUxDcE9LZHNhRXhoaWwwIiwib3JnYW5pemF0aW9uIjp7InV1aWQiOiJmNDhjZTZiNy1kNDRmLTQ4YjAtYjQxMC01NmQzZWFlMzYyNmEifSwic2NvcGUiOiIiLCJpc3MiOiJodHRwczovL2Y0OGNlNmI3LWQ0NGYtNDhiMC1iNDEwLTU2ZDNlYWUzNjI2YS1wcm9kLmUxLXVzLWVhc3QtYXp1cmUuY2hvcmVvc3RzLmRldi9vYXV0aDIvdG9rZW4iLCJleHAiOjE3NTM1NzE4MTQsImlhdCI6MTc1MzU1MDIxNCwianRpIjoiMGQyNzdkZTAtM2IzNC00ZDdiLTliYmMtNDY5ZWMwMGJhNTM5In0.Tuv6oZky6nvLZfvKIRm346gQ3PPkh_wxbSADoQVYC1xG3x9wHJPaNNymsLiYGniCYgkBaz5mZbqSlwBqTAD2IrrTqDePNBINtmFK1ltkTEMj0PpTB__lAe4epsy3oKY6gN4vDmZnJL_B8_pAjZyVSvvVNzqJhbweeVHgkvo-kxmPzVmxT8a4Y7wUt4OHYLxx-Uqn78WeS5l-rycJKOV2d4If9FqD3vn2FNzzdcft7W2dHhOg3PFlxqSFSHvRs1ODiRz-K5l8-5p71lkOIdUx1g_zPxK8grYJiZbEBrXPJ_6GV2KObwKncoix2PM3DTpcr0vPBcoI9cqYHEJn-1UDzg"
+          }
+        }
+      }
+    }
