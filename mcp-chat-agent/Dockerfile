@@ -32,5 +32,5 @@ USER 10014
 
 # Expose port 5050
 EXPOSE 5050
-
-CMD ["gunicorn", "--bind", "0.0.0.0:5050", "app:app"]
+ENV DEBUG=2
+CMD ["python", "app.py"]
