@@ -18,9 +18,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Install mcp-use package from GitHub
-RUN pip install git+https://github.com/wso2/bijira-samples.git#subdirectory=external-lib/mcp-use
+RUN pip install git+https://github.com/nisan-abeywickrama/bijira-samples.git#subdirectory=external-lib/mcp-use
 
 # Expose port 5050
 EXPOSE 5050
+
+# Create a new user with UID 10014
+RUN addgroup -g 10014 choreo && \
+    adduser --disabled-password --no-create-home --uid 10014 --ingroup choreo choreouser
+
+# Set a non-root user
+USER 10014
 
 CMD ["python", "app.py"]
