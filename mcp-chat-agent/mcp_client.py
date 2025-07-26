@@ -23,13 +23,46 @@ def _config_changed(current_config, cached_config):
     if cached_config is None:
         return True
     
-    relevant_fields = [
+    # Check non-MCP fields first
+    non_mcp_fields = [
         "provider", "api_key", "model_name", "azure_deployment", 
-        "api_version", "azure_endpoint", "mcp"
+        "api_version", "azure_endpoint"
     ]
     
-    for field in relevant_fields:
+    for field in non_mcp_fields:
         if current_config.get(field) != cached_config.get(field):
+            return True
+    
+    # Special handling for MCP configuration
+    current_mcp = current_config.get("mcp", {})
+    cached_mcp = cached_config.get("mcp", {})
+    
+    # Check if MCP configs are different
+    if _mcp_config_changed(current_mcp, cached_mcp):
+        return True
+    
+    return False
+
+def _mcp_config_changed(current_mcp, cached_mcp):
+    """Check if MCP configuration has changed."""
+    # If one is empty and the other isn't
+    if bool(current_mcp) != bool(cached_mcp):
+        return True
+    
+    # Check if server names (keys) are different
+    current_servers = set(current_mcp.keys())
+    cached_servers = set(cached_mcp.keys())
+    
+    if current_servers != cached_servers:
+        return True
+    
+    # Check if any server configuration has changed
+    for server_name in current_servers:
+        current_server_config = current_mcp[server_name]
+        cached_server_config = cached_mcp[server_name]
+        
+        # Deep comparison of server configurations
+        if current_server_config != cached_server_config:
             return True
     
     return False
